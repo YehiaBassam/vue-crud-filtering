@@ -1,6 +1,6 @@
 <template>
-  <!-- Add New Item -->
-  <add-item @addNewItem="getItems" />
+  <!-- Add & update Item -->
+  <add-update-item @addNewItem="getItems" :updatedItem="updatedItem"/>
 
   <!-- Loading -->
   <div v-if="loading" class="flex-center" style="height:80vh">
@@ -14,7 +14,7 @@
         <div class="card">
           <div class="card-header d-flex justify-content-between align-items-center" >
             <b># {{ item.id }} </b>
-            <i class="bi bi-pencil-square" style="cursor: pointer"></i>
+            <i :class="isItemUpdate ? 'bi bi-x' : 'bi bi-pencil-square'" style="cursor: pointer" @click="updateItem(item)"></i>
           </div>
           <ul class="list-group list-group-flush">
             <li class="list-group-item">Arabic : {{ item.arrivingArabicName }} </li>
@@ -51,19 +51,21 @@
 </template>
 
 <script>
-import api from '../api.js';
-import AddItem from './AddItem.vue'
-import Loading from './Loading.vue'
+import api from '../../api.js';
+import AddUpdateItem from './AddUpdateItem.vue'
+import Loading from '../Shared/Loading.vue'
 
 export default {
   components:{
-    AddItem,
+    AddUpdateItem,
     Loading,
   },
   data(){
     return{
       items: [],
-      loading : false,
+      loading: false,
+      isItemUpdate: false,
+      updatedItem: {},
     }
   },
   created(){
@@ -72,12 +74,17 @@ export default {
   methods:{
     getItems(){
       this.loading = true;
+      this.isItemUpdate = false;
       api.get('GetAllArrivingMethods?first=0&page=0&rows=10')
       .then ((res) =>{
         this.items = res.data.data;
         this.loading = false;
       });
-    }
+    },
+    updateItem(item){
+      this.isItemUpdate = !this.isItemUpdate;
+      this.isItemUpdate ? this.updatedItem = item : this.updatedItem = {};
+    },
   },
 }
 </script>

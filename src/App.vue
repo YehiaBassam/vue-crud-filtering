@@ -8,8 +8,8 @@
 
 
 <script>
-import Header from './components/Header.vue'
-import Items from './components/Items.vue'
+import Header from './components/Shared/Header.vue'
+import Items from './components/Items/Items.vue'
 
 export default {
   components: {

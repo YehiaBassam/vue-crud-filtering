@@ -25,7 +25,9 @@
     />
     </div>
     <div class="col-12 col-sm-6 col-xl-3" style="cursor: pointer">
-        <button type="submit" class="btn btn-success w-100" id="liveToastBtn">Add New Item</button>
+        <button type="submit" class="btn w-100" :class="isUpdate ? 'btn-info' : 'btn-success'">
+            {{ isUpdate ? 'update item' : 'Add New Item' }}
+        </button>
     </div>
 
     <!-- Error message -->
@@ -35,14 +37,17 @@
         </div>
     </div>
 </form>
-
-
 </template>
 
 <script>
-import api from "../api.js";
+import api from "../../api.js";
 
 export default {
+    props: {
+        updatedItem: {
+            type: Object,
+        }
+    },
     data(){
         return{
             data :{
@@ -51,7 +56,8 @@ export default {
                 sort: 0,
                 accountId: 1,
             },
-            errorMessage: ""
+            errorMessage: "",
+            isUpdate: false,
         }
     },
     methods: {
@@ -71,11 +77,33 @@ export default {
         addNewMethod(){
             api.post('AddOrUpdateArrivingMethod', this.data).then(res => {
                 this.$emit("addNewItem")
-                this.data.arrivingArabicName = "";
-                this.data.arrivingEnglishName = "";
-                this.data.sort = 0;
+                this.resetForm();
             });
         },
+        resetForm(){
+            this.data = {
+                arrivingArabicName: "",
+                arrivingEnglishName: "",
+                sort: 0,
+                accountId: 1,
+            }
+            this.isUpdate = false;
+        },
+    },
+    watch: {
+        updatedItem: {
+            handler() {
+                if ( Object.keys(this.updatedItem).length === 0 ){ // cancel upadte
+                    this.resetForm();
+                } else { // update item
+                    this.isUpdate = true;
+                    for (let [key, value] of Object.entries(this.updatedItem)) {
+                        this.data[key] = this.updatedItem[key]
+                    }
+                }
+            },
+            deep: true,
+        }
     },
 }
 </script>
