@@ -1,17 +1,18 @@
 <template>
-  <header>
-    test
-  </header>
-  
-  <main>
-    test    
+  <Header />
+
+  <main class="container">
+    <div class="text-danger">test</div>
   </main>
 </template>
 
-<script setup>
 
+<script>
+import Header from './components/Header.vue'
+
+export default {
+  components: {
+    Header,
+  },
+}
 </script>
-
-<style scoped>
-
-</style>
