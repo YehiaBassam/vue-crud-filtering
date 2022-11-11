@@ -2,17 +2,19 @@
   <Header />
 
   <main class="container">
-    <div class="text-danger">test</div>
+    <items />
   </main>
 </template>
 
 
 <script>
 import Header from './components/Header.vue'
+import Items from './components/Items.vue'
 
 export default {
   components: {
     Header,
+    Items,
   },
 }
 </script>
