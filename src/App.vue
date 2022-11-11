@@ -1,7 +1,7 @@
 <template>
   <Header />
 
-  <main class="container flex-center" style="min-height:80vh">
+  <main class="container">
     <items />
   </main>
 </template>
