@@ -41,9 +41,8 @@
 </template>
 
 <script>
-import axios from 'axios';
+import api from '../api.js';
 import Loading from './Loading.vue'
-
 
 export default {
   components:{
@@ -57,7 +56,7 @@ export default {
   },
   created(){
     this.loading = true;
-    axios.get('http://40.127.194.127:777/api/Emergency/GetAllArrivingMethods?first=0&page=0&rows=10')
+    api.get('GetAllArrivingMethods?first=0&page=0&rows=10')
     .then ((res) =>{
       this.items = res.data.data;
       this.loading = false;
