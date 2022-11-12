@@ -72,9 +72,9 @@ export default {
                 setTimeout(() => { this.errorMessage = "" }, 3000);
                 return ;
             }
-            this.addNewMethod();
+            this.addUpdateMethod();
         },
-        addNewMethod(){
+        addUpdateMethod(){
             api.post('AddOrUpdateArrivingMethod', this.data).then(res => {
                 this.$emit("addNewItem")
                 this.resetForm();
