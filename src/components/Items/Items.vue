@@ -47,23 +47,7 @@
       </div>
   
       <!-- Pagination -->
-      <nav aria-label="Page navigation example">
-        <ul class="pagination justify-content-center">
-          <li class="page-item">
-            <a class="page-link" href="#" aria-label="Previous">
-              <span aria-hidden="true">&laquo;</span>
-            </a>
-          </li>
-          <li class="page-item"><a class="page-link" href="#">1</a></li>
-          <li class="page-item active"><a class="page-link" href="#">2</a></li>
-          <li class="page-item"><a class="page-link" href="#">3</a></li>
-          <li class="page-item">
-            <a class="page-link" href="#" aria-label="Next">
-              <span aria-hidden="true">&raquo;</span>
-            </a>
-          </li>
-        </ul>
-      </nav> 
+      <Pagination :pages="allPages" :currentPage="currentPage" @changePage="changePage"/>
     </div>
   
     <h3 v-else>
@@ -75,11 +59,13 @@
 <script>
 import api from '../../api.js';
 import AddUpdateItem from './AddUpdateItem.vue'
+import Pagination from '../Shared/Pagination.vue'
 import Loading from '../Shared/Loading.vue'
 
 export default {
   components:{
     AddUpdateItem,
+    Pagination,
     Loading,
   },
   data(){
@@ -89,6 +75,8 @@ export default {
       isItemUpdate: false,
       updatedItem: {},
       deletedItemId: 0,
+      allPages: 0,
+      currentPage: 0,
     }
   },
   created(){
@@ -98,9 +86,10 @@ export default {
     getItems(){
       this.loading = true;
       this.isItemUpdate = false;
-      api.get('GetAllArrivingMethods?first=0&page=0&rows=10')
+      api.get(`GetAllArrivingMethods?first=0&page=${this.currentPage}&rows=10`)
       .then ((res) =>{
         this.items = res.data.data;
+        this.allPages = Math.ceil(res.data.totalCount / 10);
         this.loading = false;
       });
     },
@@ -117,18 +106,11 @@ export default {
       .then ((res) =>{
         this.items = this.items.filter(item => item.id != this.deletedItemId);
       });
-    }
+    },
+    changePage(page){
+      this.currentPage = page;
+      this.getItems();
+    },
   },
 }
 </script>
-
-<style scoped>
-.page-link{
-  color: #3b4260;
-}
-.active>.page-link{
-  background-color: #3b4260  ;
-  border-color:#3b4260 ;
-  color: white;
-}
-</style>
