@@ -5,7 +5,7 @@
         v-model="data.arrivingArabicName"
         type="text"
         class="form-control"
-        placeholder="Arriving Arabic Name"
+        placeholder="Arabic Name"
     />
     </div>
     <div class="col-12 col-sm-6 col-xl-3">
@@ -13,7 +13,7 @@
         v-model="data.arrivingEnglishName"
         type="text"
         class="form-control"
-        placeholder="Arriving English Name"
+        placeholder="English Name"
     />
     </div>
     <div class="col-12 col-sm-6 col-xl-3">
@@ -53,7 +53,7 @@ export default {
             data :{
                 arrivingArabicName: "",
                 arrivingEnglishName: "",
-                sort: 0,
+                sort: null,
                 accountId: 1,
             },
             errorMessage: "",
@@ -107,5 +107,3 @@ export default {
     },
 }
 </script>
-
-<style></style>

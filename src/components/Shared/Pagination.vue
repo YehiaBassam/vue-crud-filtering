@@ -4,6 +4,7 @@
       <li
         v-for="(page, index) in pages"
         :key="page"
+        style="cursor:pointer"
         class="page-item"
         :class="index == currentPage ? 'active' : null"
       >

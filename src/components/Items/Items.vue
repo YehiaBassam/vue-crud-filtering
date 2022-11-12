@@ -1,6 +1,9 @@
 <template>
   <!-- Add & update Item -->
   <add-update-item @addNewItem="getItems" :updatedItem="updatedItem"/>
+  
+  <!-- Search Bar -->
+  <search-bar @search="searchedWord"/>
 
   <!-- Delete Item -->
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -28,8 +31,8 @@
 
   <!-- Cards -->
   <div v-else>
-    <div v-if="items.length > 0" class="row g-5 py-5">
-      <div v-for="item in items" :key="item.id" class="col-12 col-sm-6 col-xl-3">
+    <div v-if="filteredItems.length > 0" class="row flex-center g-5 py-5">
+      <div v-for="item in filteredItems" :key="item.id" class="col-12 col-sm-6 col-xl-3">
         <div class="card">
           <div class="card-header d-flex justify-content-between align-items-center" >
             <b># {{ item.id }} </b>
@@ -50,27 +53,32 @@
       <Pagination :pages="allPages" :currentPage="currentPage" @changePage="changePage"/>
     </div>
   
-    <h3 v-else>
-      There is no data
-    </h3>
+    <div v-else class="flex-center" style="min-height:80vh">
+      <h3 >
+        There is no data
+      </h3>
+    </div>
   </div>
 </template>
 
 <script>
 import api from '../../api.js';
 import AddUpdateItem from './AddUpdateItem.vue'
+import SearchBar from '../Shared/SearchBar.vue'
 import Pagination from '../Shared/Pagination.vue'
 import Loading from '../Shared/Loading.vue'
 
 export default {
   components:{
     AddUpdateItem,
+    SearchBar,
     Pagination,
     Loading,
   },
   data(){
     return{
       items: [],
+      filteredItems: [],
       loading: false,
       isItemUpdate: false,
       updatedItem: {},
@@ -88,7 +96,7 @@ export default {
       this.isItemUpdate = false;
       api.get(`GetAllArrivingMethods?first=0&page=${this.currentPage}&rows=10`)
       .then ((res) =>{
-        this.items = res.data.data;
+        this.filteredItems = this.items = res.data.data;
         this.allPages = Math.ceil(res.data.totalCount / 10);
         this.loading = false;
       });
@@ -110,6 +118,16 @@ export default {
     changePage(page){
       this.currentPage = page;
       this.getItems();
+    },
+    searchedWord(val){
+      if (val){
+        this.filteredItems = this.items.filter((item) => {
+          return item.arrivingArabicName.toLowerCase().indexOf(val.toLowerCase()) >= 0 ||                                       
+            item.arrivingEnglishName.toLowerCase().indexOf(val.toLowerCase()) >= 0;
+        });
+      } else {
+        this.filteredItems = this.items;
+      }
     },
   },
 }
